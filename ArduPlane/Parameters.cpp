@@ -1,4 +1,4 @@
-#include "Plane.h"
+2#include "Plane.h"
 
 #include <AP_Gripper/AP_Gripper.h>
 
@@ -421,12 +421,12 @@ const AP_Param::Info Plane::var_info[] = {
     // @User: Advanced
     GSCALAR(throttle_passthru_stabilize,"THR_PASS_STAB",   0),
 
-    // @Param: THR_FAILSAFE
+    // @Param: RC_FAILSAFE
     // @DisplayName: Throttle and RC Failsafe Enable
     // @Description: 0 disables the failsafe. 1 enables failsafe on loss of RC input. This is detected either by throttle values below THR_FS_VALUE, loss of receiver valid pulses/data, or by the FS bit in receivers that provide it, like SBUS. A programmable failsafe action will occur and RC inputs, if present, will be ignored. A value of 2 means that the RC inputs won't be used when RC failsafe is detected by any of the above methods, but it won't trigger an RC failsafe action.
     // @Values: 0:Disabled,1:Enabled,2:EnabledNoFailsafe
     // @User: Standard
-    GSCALAR(throttle_fs_enabled,    "THR_FAILSAFE",   int(ThrFailsafe::Enabled)),
+    GSCALAR(rc_failsafe_enabled,    "RC_FAILSAFE",   int(RcFailsafe::Enabled)),
 
 
     // @Param: THR_FS_VALUE

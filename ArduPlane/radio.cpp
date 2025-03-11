@@ -110,7 +110,7 @@ void Plane::init_rc_out_aux()
     AP::srv().enable_aux_servos();
 
     servos_output();
-    
+
     // setup PWM values to send if the FMU firmware dies
     // allows any VTOL motors to shut off
     SRV_Channels::setup_failsafe_trim_all_non_motors();
@@ -238,7 +238,7 @@ int16_t Plane::rudder_input(void)
     }
 
     return 0;
-    
+
 }
 
 void Plane::control_failsafe()
@@ -285,7 +285,7 @@ void Plane::control_failsafe()
 
     const bool allow_failsafe_bypass = !arming.is_armed() && !is_flying() && (rc().enabled_protocols() != 0);
     const bool has_had_input = rc().has_had_rc_receiver() || rc().has_had_rc_override();
-    if ((ThrFailsafe(g.throttle_fs_enabled.get()) != ThrFailsafe::Enabled) || (allow_failsafe_bypass && !has_had_input)) {
+    if ((ThrFailsafe(g.rc_failsafe_enabled.get()) != ThrFailsafe::Enabled) || (allow_failsafe_bypass && !has_had_input)) {
         // If not flying and disarmed don't trigger failsafe until RC has been received for the fist time
         return;
     }
@@ -358,7 +358,7 @@ void Plane::trim_radio()
     // trim vtail
     SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_vtail_left);
     SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_vtail_right);
-    
+
     if (is_zero(SRV_Channels::get_output_scaled(SRV_Channel::k_rudder))) {
         // trim differential spoilers if no rudder input
         SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_dspoilerLeft1);
@@ -387,7 +387,10 @@ void Plane::trim_radio()
  */
 bool Plane::rc_throttle_value_ok(void) const
 {
-    if (ThrFailsafe(g.throttle_fs_enabled.get()) == ThrFailsafe::Disabled) {
+    if (ThrFailsafe(g.rc_failsafe_enabled.get()) == ThrFailsafe::Disabled) {
+        return true;
+    }
+    if (g.throttle_fs_value < 0) {
         return true;
     }
     if (channel_throttle->get_reverse()) {
